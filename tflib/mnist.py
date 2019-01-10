@@ -47,15 +47,31 @@ def mnist_generator(data, batch_size, n_labelled, limit=None):
     return get_epoch
 
 def load(batch_size, test_batch_size, n_labelled=None):
-    filepath = '/tmp/mnist.pkl.gz'
-    url = 'http://www.iro.umontreal.ca/~lisa/deep/data/mnist/mnist.pkl.gz'
+#     filepath = '/tmp/mnist.pkl.gz'
+#     url = 'http://www.iro.umontreal.ca/~lisa/deep/data/mnist/mnist.pkl.gz'
 
-    if not os.path.isfile(filepath):
-        print "Couldn't find MNIST dataset in /tmp, downloading..."
-        urllib.urlretrieve(url, filepath)
+#     if not os.path.isfile(filepath):
+#         print "Couldn't find MNIST dataset in /tmp, downloading..."
+#         urllib.urlretrieve(url, filepath)
 
-    with gzip.open('/tmp/mnist.pkl.gz', 'rb') as f:
-        train_data, dev_data, test_data = pickle.load(f)
+#     with gzip.open('/tmp/mnist.pkl.gz', 'rb') as f:
+#         train_data, dev_data, test_data = pickle.load(f)
+    
+    from keras.datasets import fashion_mnist
+
+    # Fashion MNIST dataset
+    (x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
+
+    image_size = x_train.shape[1]
+    original_dim = image_size * image_size
+    x_train = np.reshape(x_train, [-1, original_dim])
+    x_test = np.reshape(x_test, [-1, original_dim])
+    x_train = x_train.astype('float32') / 255
+    x_test = x_test.astype('float32') / 255
+
+    train_data = (x_train, y_train)
+    dev_data = (x_test, y_test)
+    test_data = (x_test, y_test)
 
     return (
         mnist_generator(train_data, batch_size, n_labelled), 
