@@ -58,6 +58,7 @@ def load(batch_size, test_batch_size, n_labelled=None):
 #         train_data, dev_data, test_data = pickle.load(f)
     
     from keras.datasets import fashion_mnist
+    import numpy as np
 
     # Fashion MNIST dataset
     (x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
